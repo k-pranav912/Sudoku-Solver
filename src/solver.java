@@ -1,3 +1,7 @@
+import java.io.IOException;
+import java.net.URL;
+import java.util.Scanner;
+
 public class solver {
 
     public static boolean validEntry(int[][] sudoku, int row, int col) {
@@ -102,18 +106,51 @@ public class solver {
         return false;
     }
 
-    public static void main(String[] args) {
+    public static int[][] generateSudoku() throws IOException {
 
-        int[][] sudoku = {
-                {0, 6, 8, 0, 0, 2, 4, 7, 9},
-                {4, 0, 3, 0, 0, 8, 0, 0, 0},
-                {0, 2, 1, 6, 0, 0, 5, 3, 0},
-                {8, 0, 0, 0, 4, 7, 9, 1, 3},
-                {7, 0, 0, 0, 0, 3, 0, 0, 4},
-                {2, 3, 4, 1, 9, 0, 0, 8, 7},
-                {0, 4, 7, 5, 2, 0, 0, 0, 1},
-                {0, 8, 0, 4, 0, 0, 0, 2, 0},
-                {0, 0, 0, 0, 0, 0, 0, 0, 0} };
+        //Sudoku generator api
+        // Author: Roberto Ortega (berto)
+        // retrieved from https://github.com/berto/sugoku
+        URL url = new URL("https://sugoku.herokuapp.com/board?difficulty=random");
+
+        String out = new Scanner(new URL("https://sugoku.herokuapp.com/board?difficulty=random").openStream(), "UTF-8").useDelimiter("\\A").next();
+
+        int[][] sudoku = new int[9][9];
+
+        int row = 0;
+        int col = 0;
+
+        for (int i = 0; i < out.length(); i++) {
+            if (Character.isDigit(out.charAt(i))) {
+                sudoku[row][col] = (int) out.charAt(i) - 48;
+
+                if (col == 8) {
+                    row++;
+                    col = 0;
+                } else {
+                    col++;
+                }
+            }
+        }
+
+        return sudoku;
+
+    }
+
+    public static void main(String[] args) throws IOException {
+
+//        int[][] sudoku = {
+//                {0, 6, 8, 0, 0, 2, 4, 7, 9},
+//                {4, 0, 3, 0, 0, 8, 0, 0, 0},
+//                {0, 2, 1, 6, 0, 0, 5, 3, 0},
+//                {8, 0, 0, 0, 4, 7, 9, 1, 3},
+//                {7, 0, 0, 0, 0, 3, 0, 0, 4},
+//                {2, 3, 4, 1, 9, 0, 0, 8, 7},
+//                {0, 4, 7, 5, 2, 0, 0, 0, 1},
+//                {0, 8, 0, 4, 0, 0, 0, 2, 0},
+//                {0, 0, 0, 0, 0, 0, 0, 0, 0} };
+
+        int[][] sudoku = generateSudoku();
 
         printSudoku(sudoku);
 
